@@ -21,10 +21,9 @@ El juego presenta gráficos coloridos y un diseño simple, pero atractivo, con f
 ### 🎖️ Logros y Puntuaciones Altas
 Aunque simple, el juego puede incluir un sistema de logros o una tabla de puntuaciones altas 🏆, incentivando a los jugadores a mejorar sus habilidades y competir con otros.
 
-![Capture](https://github.com/Luiso-o/Flappy_Bird/assets/128043647/4cc96baf-3ade-469c-bea9-1c30c1a8fd45)
-
-
 ### 🔄 Reinicio y Repetibilidad
 Con un diseño de juego intuitivo y una mecánica de juego adictiva, Flappy Bird invita a los jugadores a "solo una partida más", haciendo que sea un pasatiempo divertido y desafiante que es fácil de aprender pero difícil de dominar.
 
 Este proyecto es un tributo 🙌 al juego original de Flappy Bird, manteniendo su esencia mientras ofrece a los jugadores una experiencia fresca y accesible en dispositivos modernos.
+
+![Capture](https://github.com/Luiso-o/Flappy_Bird/assets/128043647/4cc96baf-3ade-469c-bea9-1c30c1a8fd45)
