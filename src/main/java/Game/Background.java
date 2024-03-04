@@ -4,8 +4,8 @@ import java.awt.Image;
 public class Background {
     private final Image image;
 
-    public Background(String imagePath) {
-        this.image = ImageLoader.loadImage(imagePath);
+    public Background() {
+        this.image = ImageLoader.loadImage("background.png");
     }
 
     public Image getImage() {
