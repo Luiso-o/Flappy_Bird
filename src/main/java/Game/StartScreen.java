@@ -55,7 +55,7 @@ public class StartScreen extends JPanel {
         add(startButton, gbc);
 
         // Configura el fondo
-        background = new Background("background.png");
+        background = new Background();
     }
 
 

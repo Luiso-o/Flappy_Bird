@@ -12,9 +12,9 @@ public class Bird {
     private final Image img;
     private int velocity = 0;
 
-    public Bird(int boardWidth) {
-        this.x = boardWidth / 8;
-        this.y = boardWidth / 2;
+    public Bird() {
+        this.x = 360 / 8;
+        this.y = 360 / 2;
         this.width = 34;
         this.height = 24;
         this.img = loadImage("flappybird.png");
@@ -22,10 +22,9 @@ public class Bird {
 
     // Actualiza la posición del pájaro basada en la gravedad
     public void update() {
-        // Gravedad que afecta al pájaro
         int gravity = 1;
-        velocity += gravity; // Aumenta la velocidad basada en la gravedad
-        y += velocity; // Actualiza la posición Y basada en la velocidad
+        velocity += gravity;
+        y += velocity;
     }
 
     // Método para que el pájaro "salte"
@@ -33,7 +32,7 @@ public class Bird {
         velocity = -9; // Un valor negativo para mover el pájaro hacia arriba en el tablero
     }
 
-    // Getters y setters si son necesarios
+    // Getters
     public int getX() { return x; }
     public int getY() { return y; }
     public int getWidth() { return width; }
