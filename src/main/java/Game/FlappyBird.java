@@ -2,143 +2,94 @@ package main.java.Game;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import javax.swing.*;
 
 public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     private static final int BOARD_WIDTH = 360;
     private static final int BOARD_HEIGHT = 640;
-    private static final int VELOCITY_X = -4; //movimiento de las tuberias
-    private static final int TUBERIA_HEIGHT = 512;
-    private static final int OPENING_SPACE = BOARD_HEIGHT / 4;
-    Bird bird = new Bird();
-    Score score = new Score();
-    Draw drawer = new Draw(BOARD_WIDTH,BOARD_HEIGHT);
-    ArrayList<Tuberia> tuberias = new ArrayList<>();
-    Timer gameLoop = new Timer(1000/60, this);
-    Timer placeTuberiaTimer = new Timer(1500, e -> placePipes());
-    boolean gameOver = false;
-    boolean isPaused = false;
-
+    private GameState CURRENT_STATE = GameState.PLAYING;
+    private final Timer placePipeTimer;
+    private final PipeManager gestorDeTuberia;
+    private Bird bird = new Bird();
+    private final Score score = new Score();
+    private final Draw drawer = new Draw(BOARD_WIDTH,BOARD_HEIGHT);
+    private final Timer gameLoop = new Timer(1000/60, this);
 
     public FlappyBird() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
         setFocusable(true);
         addKeyListener(this);
 
-        placeTuberiaTimer.start();
+        gestorDeTuberia = new PipeManager(BOARD_WIDTH,BOARD_HEIGHT);
+        placePipeTimer = new Timer(1500, e -> gestorDeTuberia.placePipes());
+
+        placePipeTimer.start();
         gameLoop.start();
-    }
-
-    void placePipes() {
-        int randomPipeY = generateRandomPipeY();
-
-        // Añade una tubería superior a la lista
-        Tuberia tuberiaSuperior = new Tuberia(BOARD_WIDTH, "tuboSuperior.png");
-        tuberiaSuperior.setY(randomPipeY);
-        tuberias.add(tuberiaSuperior);
-
-        // Añade una tubería inferior a la lista
-        Tuberia tuberiaInferior = new Tuberia(BOARD_WIDTH, "tuboInferior.png");
-        tuberiaInferior.setY(randomPipeY + TUBERIA_HEIGHT + OPENING_SPACE);
-        tuberias.add(tuberiaInferior);
-    }
-
-    private int generateRandomPipeY() {
-        return (int) (-TUBERIA_HEIGHT / 4 - Math.random() * (TUBERIA_HEIGHT / 2));
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         // Dibuja el juego
-        drawer.draw(g, bird, tuberias, gameOver, score);
+        drawer.draw(g, bird, gestorDeTuberia.getTuberias(), CURRENT_STATE == GameState.GAME_OVER, score);
 
         // Si el juego está pausado, dibuja el texto de pausa
-        if (isPaused && !gameOver) {
+        if (CURRENT_STATE == GameState.PAUSED) {
             drawer.drawPauseScreen(g);
         }
     }
 
-    public void move() {
-        bird.update();
-
-        //tuberias
-        for (Tuberia pipe : tuberias) {
-            pipe.moveLeft(-VELOCITY_X);
-
-            if (!pipe.isPassed() && bird.getX() > pipe.getX()+ pipe.getWidth()) {
-                score.addScore(0.5);
-                pipe.setPassed(true);
-            }
-
-            if (collision(bird, pipe)) {
-                gameOver = true;
-            }
-        }
-
-        // Verificar si el pájaro toca el suelo
-        if (bird.getY() + bird.getHeight() >= BOARD_HEIGHT) {
-            gameOver = true;
-        }
-    }
-
-    // Método para comprobar si hay una colisión entre el pájaro y una tubería
-    boolean collision(Bird a, Tuberia b) {
-        Rectangle birdRect = new Rectangle(a.getX(), a.getY(), a.getWidth(), a.getHeight());
-        Rectangle pipeRect = new Rectangle(b.getX(), b.getY(), b.getWidth(), b.getHeight());
-
-        return birdRect.intersects(pipeRect);
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        move();
+        if (CURRENT_STATE == GameState.PLAYING){
+            CURRENT_STATE = gestorDeTuberia.movePipes(bird, score, CURRENT_STATE,BOARD_HEIGHT);
+        }
         repaint();
-        if (gameOver) {
-            placeTuberiaTimer.stop();
+        if (CURRENT_STATE == GameState.GAME_OVER) {
+            placePipeTimer.stop();
             gameLoop.stop();
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if (!isPaused && !gameOver) {
-                bird.jump();
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (!gameOver) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_SPACE:
+                handleJumpOrRestart();
+                break;
+            case KeyEvent.VK_ENTER:
                 togglePause();
-            }
+                break;
         }
+    }
 
-        if (gameOver && e.getKeyCode() == KeyEvent.VK_SPACE) {
+    private void handleJumpOrRestart() {
+        if (CURRENT_STATE == GameState.PLAYING) {
+            bird.jump();
+        } else if (CURRENT_STATE == GameState.GAME_OVER) {
             restartGame();
         }
     }
 
     private void restartGame() {
         bird = new Bird();
-        tuberias.clear();
+        gestorDeTuberia.resetPipes();
         score.resetScore();
-        gameOver = false;
-        isPaused = false;
+        CURRENT_STATE = GameState.PLAYING;
         gameLoop.start();
-        placeTuberiaTimer.start();
+        placePipeTimer.start();
     }
 
     private void togglePause() {
-        // Si el juego está pausado, reanudarlo; si no, pausarlo.
-        if (isPaused) {
-            gameLoop.start();
-            placeTuberiaTimer.start();
-        } else {
+        if (CURRENT_STATE == GameState.PLAYING) {
+            CURRENT_STATE = GameState.PAUSED;
             gameLoop.stop();
-            placeTuberiaTimer.stop();
+            placePipeTimer.stop();
+        } else if (CURRENT_STATE == GameState.PAUSED) {
+            CURRENT_STATE = GameState.PLAYING;
+            gameLoop.start();
+            placePipeTimer.start();
         }
-        // Cambiar el estado de pausa al opuesto de lo que estaba.
-        isPaused = !isPaused;
         repaint();
     }
 

@@ -25,11 +25,20 @@ public class Bird {
         int gravity = 1;
         velocity += gravity;
         y += velocity;
+
+        if(y < 0){
+            y = 0;
+            velocity = 0;
+        }
     }
 
     // Método para que el pájaro "salte"
     public void jump() {
         velocity = -9; // Un valor negativo para mover el pájaro hacia arriba en el tablero
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
     }
 
     // Getters
