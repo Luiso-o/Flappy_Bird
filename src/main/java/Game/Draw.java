@@ -19,7 +19,7 @@ public class Draw {
         this.BOARD_HEIGHT = BOARD_HEIGHT;
     }
 
-    public void draw(Graphics g,Bird bird, ArrayList<Tuberia> tuberias, Boolean gameOver, Score score) {
+    public void draw(Graphics g, Bird bird, ArrayList<Pipe> tuberias, Boolean gameOver, Score score) {
         drawBackground(g);
         drawBird(g, bird);
         drawPipes(g,tuberias);
@@ -34,8 +34,8 @@ public class Draw {
         g.drawImage(bird.getImg(), bird.getX(), bird.getY(), bird.getWidth(), bird.getHeight(), null);
     }
 
-    public void drawPipes(Graphics g, ArrayList<Tuberia> tuberias) {
-        for (Tuberia pipe : tuberias) {
+    public void drawPipes(Graphics g, ArrayList<Pipe> tuberias) {
+        for (Pipe pipe : tuberias) {
             g.drawImage(pipe.getImg(), pipe.getX(), pipe.getY(), pipe.getWidth(), pipe.getHeight(), null);
         }
     }

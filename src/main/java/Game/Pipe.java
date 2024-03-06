@@ -1,15 +1,15 @@
 package main.java.Game;
 
-import java.awt.Image;
+import java.awt.*;
 
-public class Tuberia {
+public class Pipe {
     private int x, y;
     private final int width, height;
     private final Image img;
     private boolean passed;
 
     // Constructor
-    public Tuberia(int BOARD_WITH, String imgPath) {
+    public Pipe(int BOARD_WITH, String imgPath) {
         this.x = BOARD_WITH;
         this.y = 0;
         this.width = 64;
@@ -54,6 +54,10 @@ public class Tuberia {
 
     public void moveLeft(int speed) {
         this.x -= speed;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
     }
 
 }
