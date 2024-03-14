@@ -26,4 +26,5 @@ Con un diseño de juego intuitivo y una mecánica de juego adictiva, Flappy Bird
 
 Este proyecto es un tributo 🙌 al juego original de Flappy Bird, manteniendo su esencia mientras ofrece a los jugadores una experiencia fresca y accesible en dispositivos modernos.
 
-![Capture](https://github.com/Luiso-o/Flappy_Bird/assets/128043647/4cc96baf-3ade-469c-bea9-1c30c1a8fd45)
+https://github.com/Luiso-o/Flappy_Bird/assets/128043647/0e8fba25-f030-4df1-b3bb-8e765db63be6
+
